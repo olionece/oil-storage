@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import type { Session } from '@supabase/supabase-js';
+import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
 
 type Role = 'viewer' | 'operator' | 'admin';
 type Lot = 'A' | 'B' | 'C';
@@ -31,7 +31,9 @@ export default function Home() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s));
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, s: Session | null) => setSession(s)
+    );
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -311,4 +313,12 @@ function MovementForm({
       </div>
     </form>
   );
+import HomeClient from '@/components/HomeClient';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default function Page() {
+  return <HomeClient />;
+}
+
 }
