@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { getSupabase } from '@/lib/supabaseClient';
+import { getSupabase } from '../lib/supabaseClient';
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js';
 
 type Role = 'viewer' | 'operator' | 'admin';
@@ -132,7 +132,9 @@ function StockTable({ rows }: { rows: StockRow[] }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => (
+          {rows.length === 0 ? (
+            <tr><td className="p-3 text-sm" colSpan={6}>Nessuna giacenza (registra un carico per iniziare).</td></tr>
+          ) : rows.map((r, i) => (
             <tr key={i}>
               <td className="p-2 border">{r.warehouse}</td>
               <td className="p-2 border">{r.year}</td>
@@ -142,9 +144,6 @@ function StockTable({ rows }: { rows: StockRow[] }) {
               <td className="p-2 border text-right">{fmt(r.approx_units)}</td>
             </tr>
           ))}
-          {rows.length === 0 && (
-            <tr><td className="p-3 text-sm" colSpan={6}>Nessuna giacenza (registra un carico per iniziare).</td></tr>
-          )}
         </tbody>
       </table>
     </div>
